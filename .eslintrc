@@ -1,0 +1,7 @@
+{
+  "extends": "@ocavue/eslint-config",
+  "rules": {
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-namespace": "off"
+  }
+}

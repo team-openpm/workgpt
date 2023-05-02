@@ -1,0 +1,82 @@
+{
+  "name": "workgpt",
+  "type": "module",
+  "version": "0.0.4",
+  "packageManager": "pnpm@7.32.0",
+  "description": "",
+  "author": "Alex MacCaw <alex@alexmaccaw.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/maccman/workgpt#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maccman/workgpt.git"
+  },
+  "bugs": "https://github.com/maccman/workgpt/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "engines": {
+    "node": ">= 18"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "prepublishOnly": "nr build",
+    "start": "esno src/index.ts",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "example:calculate": "tsx ./examples/calculate.ts",
+    "example:dadjoke": "tsx ./examples/dadjoke.ts",
+    "example:openpm-ipinfo": "tsx ./examples/openpm-ipinfo.ts"
+  },
+  "devDependencies": {
+    "@antfu/ni": "^0.21.3",
+    "@ocavue/eslint-config": "^0.4.7",
+    "@readme/openapi-parser": "^2.5.0",
+    "@types/node": "^18.15.11",
+    "eslint": "^8.38.0",
+    "esno": "^0.16.3",
+    "expr-eval": "^2.0.2",
+    "prettier": "^2.8.7",
+    "tsup": "^6.7.0",
+    "tsx": "^3.12.6",
+    "typescript": "^5.0.4",
+    "vite": "^4.2.1",
+    "vitest": "^0.30.0"
+  },
+  "renovate": {
+    "extends": [
+      "github>ocavue/config-renovate"
+    ]
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "reflect-metadata": "^0.1.13",
+    "zod": "^3.21.4",
+    "zod-to-ts": "^1.1.4"
+  },
+  "peerDependencies": {
+    "vm2": "^3.9.17"
+  }
+}
