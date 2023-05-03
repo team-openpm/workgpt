@@ -46,15 +46,16 @@
     "start": "esno src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "example:calculate": "tsx ./examples/calculate.ts",
-    "example:dadjoke": "tsx ./examples/dadjoke.ts",
-    "example:openpm-ipinfo": "tsx ./examples/openpm-ipinfo.ts"
+    "example:calculate": "env-cmd -f .env.local tsx ./examples/calculate.ts",
+    "example:dadjoke": "env-cmd -f .env.local tsx ./examples/dadjoke.ts",
+    "example:openpm-ipinfo": "env-cmd -f .env.local tsx ./examples/openpm-ipinfo.ts"
   },
   "devDependencies": {
     "@antfu/ni": "^0.21.3",
     "@ocavue/eslint-config": "^0.4.7",
     "@readme/openapi-parser": "^2.5.0",
     "@types/node": "^18.15.11",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.38.0",
     "esno": "^0.16.3",
     "expr-eval": "^2.0.2",
