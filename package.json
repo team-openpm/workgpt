@@ -2,6 +2,7 @@
   "name": "workgpt",
   "type": "module",
   "version": "0.0.4",
+  "packageManager": "pnpm@8.5.1",
   "description": "",
   "author": "Alex MacCaw <alex@alexmaccaw.com>",
   "license": "MIT",
