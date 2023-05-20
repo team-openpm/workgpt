@@ -18,7 +18,7 @@ export class OpenApiDocument {
       dereference: { circular: 'ignore' },
     })
 
-    return new this(parsed)
+    return new this(parsed as OpenAPI.Document)
   }
 
   document: OpenAPI.Document

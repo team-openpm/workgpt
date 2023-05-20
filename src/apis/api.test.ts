@@ -17,9 +17,9 @@ describe('ApiBase', () => {
 
   it('has interface', async () => {
     expect(myApi.interface).toMatchInlineSnapshot(`
-      "namespace MyApi {
+      "declare namespace MyApi {
         // myapi doSomething
-        function doSomething(string, string): any
+        function doSomething(string, string): Promise<any>
       }"
     `)
   })
