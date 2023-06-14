@@ -1,10 +1,11 @@
 import { JSONSchema7 } from 'json-schema'
 
-export type ChatMessageRole = 'user' | 'system' | 'assistant'
+export type ChatMessageRole = 'user' | 'system' | 'assistant' | 'function'
 
 export interface ChatMessage {
   role: ChatMessageRole
   content: string
+  name?: string
 }
 
 export interface UserChatMessage extends ChatMessage {
@@ -17,13 +18,23 @@ export interface ChatFunction {
   parameters: JSONSchema7
 }
 
+export interface ChatRequest {
+  messages: ChatMessage[]
+  functions?: ChatFunction[]
+  functionCall?: string
+}
+
+export interface ChatResponseMessage {
+  role: ChatMessageRole
+  content: string
+}
+
+export interface ChatResponseFunctionCall {
+  name: string
+  arguments: any
+}
+
 export interface ChatResponse {
-  message: {
-    role: ChatMessageRole
-    content: string
-  }
-  function_call?: {
-    name: string
-    arguments: Record<string, any>
-  }
+  message: ChatResponseMessage
+  functionCall?: ChatResponseFunctionCall
 }

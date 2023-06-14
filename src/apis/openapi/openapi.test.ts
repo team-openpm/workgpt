@@ -1,6 +1,6 @@
 import { OpenApi } from './openapi'
 import openpm from './fixtures/openpm.json'
-import { printSchema } from '../../lib/zod-fns'
+import { zodToFunctionParameters } from '../../lib/zod-fns'
 
 describe('OpenApi', async () => {
   const api = await OpenApi.fromDocument(openpm)
@@ -8,9 +8,9 @@ describe('OpenApi', async () => {
   it('should create an OpenApi instance from a document', () => {
     expect(
       api.invokables.map((i) => [
-        i.method,
-        i.usage,
-        i.schema ? printSchema(i.schema) : null,
+        i.name,
+        i.description,
+        i.schema ? zodToFunctionParameters(i.schema) : null,
       ])
     ).toMatchInlineSnapshot(`
       [

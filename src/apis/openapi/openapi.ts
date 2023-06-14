@@ -105,8 +105,8 @@ export class OpenApi extends Api {
 
 function endpointToInvokable(endpoint: OpenApiEndpoint): Invokable {
   return {
-    method: endpoint.apiMethod,
-    usage: endpoint.apiUsage,
+    name: endpoint.apiMethod,
+    description: endpoint.apiUsage,
     schema: endpoint.apiSchema,
     responseSchema: endpoint.apiResponseSchema,
   }

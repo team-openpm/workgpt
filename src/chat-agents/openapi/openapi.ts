@@ -1,12 +1,17 @@
 import { assert } from '../../lib/assert'
 import { ChatAgent } from '../base'
 import { logChatMessage } from '../logger'
-import { ChatFunction, ChatMessage } from '../types'
+import {
+  ChatFunction,
+  ChatMessage,
+  ChatResponse,
+  ChatResponseFunctionCall,
+} from '../types'
 import { fetchApi } from './client'
-import { ChatCompletion, ChatCompletionChoice } from './types'
+import { OpenAIChatCompletion, OpenAIChatCompletionMessage } from './types'
 
 export interface OpenApiAgentOptions {
-  model?: 'gpt-3.5-turbo-0613' | 'gpt-4-0613'
+  model?: 'gpt-3.5-turbo-0613' | 'gpt-4-0613' | 'gpt-4' | 'gpt-3.5-turbo'
   temperature?: number
   apiKey?: string
   verbose?: boolean
@@ -33,19 +38,22 @@ export class OpenApiAgent extends ChatAgent {
   async call({
     messages,
     functions,
+    functionCall,
   }: {
     messages: ChatMessage[]
     functions?: ChatFunction[]
-  }): Promise<ChatCompletionChoice> {
-    this.onRequest(messages)
+    functionCall?: string
+  }): Promise<ChatResponse> {
+    this.onRequest({ messages, functions })
 
-    const response = await fetchApi<ChatCompletion>(`/chat/completions`, {
+    const response = await fetchApi<OpenAIChatCompletion>(`/chat/completions`, {
       method: 'POST',
       body: {
         model: this.model,
         temperature: this.temperature,
         messages,
         functions,
+        function_call: functionCall ? { name: functionCall } : undefined,
       },
       apiKey: this.apiKey,
     })
@@ -53,21 +61,46 @@ export class OpenApiAgent extends ChatAgent {
     assert(response.choices.length === 1, 'Expected response.choices to be 1')
 
     const [choice] = response.choices
+    const message = choice.message
 
-    this.onResponse(choice)
+    let responseFunctionCall: ChatResponseFunctionCall | undefined
 
-    return choice
+    if (message.function_call) {
+      responseFunctionCall = {
+        name: message.function_call.name,
+        arguments: JSON.parse(message.function_call.arguments),
+      }
+    }
+
+    this.onResponse(message)
+
+    return {
+      message,
+      functionCall: responseFunctionCall,
+    }
   }
 
-  protected onRequest(messages: ChatMessage[]) {
-    this.logMessages(messages)
+  protected onRequest({
+    messages,
+    functions,
+  }: {
+    messages: ChatMessage[]
+    functions?: ChatFunction[]
+  }) {
+    this.log({ messages, functions })
   }
 
-  protected onResponse(choice: ChatCompletionChoice) {
-    this.logMessages([choice.message])
+  protected onResponse(message: OpenAIChatCompletionMessage) {
+    this.log({ messages: [message] })
   }
 
-  protected logMessages(messages: ChatMessage[]) {
+  protected log({
+    messages,
+    functions,
+  }: {
+    messages: ChatMessage[]
+    functions?: ChatFunction[]
+  }) {
     if (!this.verbose) {
       return
     }
@@ -75,5 +108,8 @@ export class OpenApiAgent extends ChatAgent {
     // TODO incoming/outgoing
 
     messages.forEach(logChatMessage)
+
+    // Todo
+    console.log(functions)
   }
 }

@@ -1,5 +1,18 @@
-import { indent } from '../../lib/string-fns'
+import { Invokable } from '../types'
+import { zodToFunctionParameters } from '../../lib/zod-fns'
+import { ChatFunction } from '../../chat-agents/types'
 
-export function buildInterface(namespace: string, definition: string): string {
-  return `declare namespace ${namespace} {\n${indent(definition)}\n}`
+export function getChatFunction(invokable: Invokable): ChatFunction {
+  const { name, description, schema } = invokable
+
+  return {
+    name,
+    description,
+    parameters: schema
+      ? zodToFunctionParameters(schema)
+      : {
+          type: 'object',
+          properties: {},
+        },
+  }
 }

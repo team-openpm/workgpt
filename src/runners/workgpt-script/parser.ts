@@ -5,8 +5,8 @@ function buildContext(apis: Api[]) {
   const WorkGpt = {
     ...apis.reduce((acc, api) => {
       acc[api.namespace] = api.invokables.reduce((acc, invokable) => {
-        acc[invokable.method] = (...args: any[]) => {
-          return api.invoke({ method: invokable.method, args })
+        acc[invokable.name] = (...args: any[]) => {
+          return api.invoke({ method: invokable.name, args })
         }
         return acc
       }, {} as { [key: string]: any })

@@ -5,7 +5,6 @@ import { Runner } from '../base'
 import { buildInitialPrompt } from './prompt'
 import { parseInvocation } from './invocations/parse'
 import { parseJsonFromMarkdown } from '../../lib/markdown'
-import { WorkGptControl } from '../../apis/workgpt-control'
 import { Api } from '../../apis'
 import { renderInvocationResult } from './invocations/render'
 
@@ -20,7 +19,7 @@ export class WorkGptRunner extends Runner {
 
   constructor({ agent, onResult, apis = [] }: WorkGptRunnerOptions) {
     super({ agent, onResult })
-    this.apis = [...apis, new WorkGptControl()]
+    this.apis = apis
   }
 
   async runWithDirective(directive: string) {
