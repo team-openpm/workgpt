@@ -1,4 +1,4 @@
-import { ChatMessage } from './types'
+import { ChatFunction, ChatMessage, ChatResponse } from './types'
 
 export abstract class ChatAgent {
   verbose: boolean
@@ -7,5 +7,8 @@ export abstract class ChatAgent {
     this.verbose = verbose
   }
 
-  abstract call(messages: ChatMessage[]): Promise<ChatMessage[]>
+  abstract call(args: {
+    messages: ChatMessage[]
+    functions?: ChatFunction[]
+  }): Promise<ChatResponse>
 }

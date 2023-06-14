@@ -1,11 +1,12 @@
+import { assert } from '../../lib/assert'
 import { ChatAgent } from '../base'
 import { logChatMessage } from '../logger'
-import { ChatMessage } from '../types'
+import { ChatFunction, ChatMessage } from '../types'
 import { fetchApi } from './client'
-import { ChatCompletion } from './types'
+import { ChatCompletion, ChatCompletionChoice } from './types'
 
 export interface OpenApiAgentOptions {
-  model?: 'gpt-3.5-turbo' | 'gpt-4'
+  model?: 'gpt-3.5-turbo-0613' | 'gpt-4-0613'
   temperature?: number
   apiKey?: string
   verbose?: boolean
@@ -17,7 +18,7 @@ export class OpenApiAgent extends ChatAgent {
   apiKey: string | undefined
 
   constructor({
-    model = 'gpt-3.5-turbo',
+    model = 'gpt-4-0613',
     temperature = 0,
     apiKey,
     verbose = false,
@@ -29,7 +30,13 @@ export class OpenApiAgent extends ChatAgent {
     this.apiKey = apiKey
   }
 
-  async call(messages: ChatMessage[]): Promise<ChatMessage[]> {
+  async call({
+    messages,
+    functions,
+  }: {
+    messages: ChatMessage[]
+    functions?: ChatFunction[]
+  }): Promise<ChatCompletionChoice> {
     this.onRequest(messages)
 
     const response = await fetchApi<ChatCompletion>(`/chat/completions`, {
@@ -38,25 +45,26 @@ export class OpenApiAgent extends ChatAgent {
         model: this.model,
         temperature: this.temperature,
         messages,
+        functions,
       },
       apiKey: this.apiKey,
     })
 
-    const responseMessages: ChatMessage[] = response.choices.map(
-      (choice) => choice.message
-    )
+    assert(response.choices.length === 1, 'Expected response.choices to be 1')
 
-    this.onResponse(responseMessages)
+    const [choice] = response.choices
 
-    return responseMessages
+    this.onResponse(choice)
+
+    return choice
   }
 
   protected onRequest(messages: ChatMessage[]) {
     this.logMessages(messages)
   }
 
-  protected onResponse(messages: ChatMessage[]) {
-    this.logMessages(messages)
+  protected onResponse(choice: ChatCompletionChoice) {
+    this.logMessages([choice.message])
   }
 
   protected logMessages(messages: ChatMessage[]) {

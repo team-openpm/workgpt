@@ -1,5 +1,18 @@
 type ChatRole = 'user' | 'system' | 'assistant'
 
+export interface ChatCompletionChoice {
+  message: {
+    role: ChatRole
+    content: string
+  }
+  finish_reason: string
+  index: number
+  function_call?: {
+    name: string
+    arguments: Record<string, any>
+  }
+}
+
 export interface ChatCompletion {
   id: string
   object: string
@@ -10,14 +23,5 @@ export interface ChatCompletion {
     completion_tokens: number
     total_tokens: number
   }
-  choices: [
-    {
-      message: {
-        role: ChatRole
-        content: string
-      }
-      finish_reason: string
-      index: number
-    }
-  ]
+  choices: ChatCompletionChoice[]
 }
