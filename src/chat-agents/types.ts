@@ -6,10 +6,12 @@ export interface ChatMessage {
   role: ChatMessageRole
   content: string
   name?: string
+  functionCall?: ChatFunctionCall
 }
 
-export interface UserChatMessage extends ChatMessage {
-  role: 'user'
+export interface ChatFunctionCall {
+  name: string
+  arguments: any
 }
 
 export interface ChatFunction {
@@ -24,15 +26,4 @@ export interface ChatRequest {
   functionCall?: string
 }
 
-export interface ChatResponseFunctionCall {
-  name: string
-  arguments: any
-}
-
-export interface ChatResponseMessage {
-  role: ChatMessageRole
-  content: string | null
-  functionCall?: ChatResponseFunctionCall
-}
-
-export type ChatResponse = ChatResponseMessage
+export type ChatResponse = ChatMessage

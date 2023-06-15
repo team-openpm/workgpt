@@ -1,14 +1,14 @@
 import { Calculator } from '../src/apis/calculator'
 import { FactApi } from '../src/apis/fact'
 import { OpenpmApi } from '../src/apis/openpm'
-import { OpenApiAgent } from '../src/chat-agents/open-ai'
+import { OpenAiAgent } from '../src/chat-agents/open-ai'
 import { WorkGptRunner } from '../src/runners/workgpt'
 
 async function main() {
-  const agent = new OpenApiAgent({
+  const agent = new OpenAiAgent({
     verbose: true,
     temperature: 0.1,
-    model: 'gpt-4',
+    model: 'gpt-4-0613',
   })
 
   const apis = await Promise.all([

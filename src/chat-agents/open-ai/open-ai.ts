@@ -1,14 +1,10 @@
 import { assert } from '../../lib/assert'
 import { ChatAgent } from '../base'
 import { logChatMessage } from '../logger'
-import {
-  ChatFunction,
-  ChatMessage,
-  ChatResponse,
-  ChatResponseFunctionCall,
-} from '../types'
+import { ChatFunction, ChatMessage, ChatResponse } from '../types'
 import { fetchApi } from './client'
-import { OpenAIChatCompletion, OpenAIChatCompletionMessage } from './types'
+import { normalizeChatMessage } from './helpers'
+import { OpenAIChatCompletion } from './types'
 
 export interface OpenApiAgentOptions {
   model?: 'gpt-3.5-turbo-0613' | 'gpt-4-0613' | 'gpt-4' | 'gpt-3.5-turbo'
@@ -61,24 +57,11 @@ export class OpenAiAgent extends ChatAgent {
     assert(response.choices.length === 1, 'Expected response.choices to be 1')
 
     const [choice] = response.choices
-    const message = choice.message
-
-    let parsedFunctionCall: ChatResponseFunctionCall | undefined
-
-    if (message.function_call) {
-      parsedFunctionCall = {
-        name: message.function_call.name,
-        arguments: JSON.parse(message.function_call.arguments),
-      }
-    }
+    const message = normalizeChatMessage(choice.message)
 
     this.onResponse(message)
 
-    return {
-      role: message.role,
-      content: message.content,
-      functionCall: parsedFunctionCall,
-    }
+    return message
   }
 
   protected onRequest({
@@ -91,7 +74,7 @@ export class OpenAiAgent extends ChatAgent {
     this.log({ messages, functions })
   }
 
-  protected onResponse(message: OpenAIChatCompletionMessage) {
+  protected onResponse(message: ChatResponse) {
     this.log({ messages: [message] })
   }
 

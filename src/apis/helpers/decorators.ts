@@ -23,6 +23,7 @@ export function invokable({
       name: method,
       description: typeof usage === 'string' ? usage : usage(),
       schema,
+      callback: descriptor.get ?? descriptor.value,
     })
 
     setInvocables(target, existingInvokables)

@@ -1,9 +1,11 @@
 import { ChatAgent } from '../../chat-agents/base'
-import { ChatMessage, UserChatMessage } from '../../chat-agents/types'
-import { assert } from '../../lib/assert'
+import {
+  ChatFunctionCall,
+  ChatMessage,
+  ChatResponse,
+} from '../../chat-agents/types'
 import { Runner } from '../base'
 import { buildInitialPrompt } from './prompt'
-import { parseJsonFromMarkdown } from '../../lib/markdown'
 import { Api } from '../../apis'
 import { WorkGptControl } from '../../apis/workgpt-control'
 
@@ -25,30 +27,35 @@ export class WorkGptRunner extends Runner {
     return this.run(buildInitialPrompt({ apis: this.apis, directive }))
   }
 
-  async call(assistantMessages: ChatMessage[]): Promise<UserChatMessage[]> {
-    assert(
-      assistantMessages.length === 1,
-      'WorkGptRunner only supports one assistant message'
-    )
+  async call(message: ChatResponse): Promise<ChatMessage> {
+    if (message.functionCall) {
+      return this.onFunctionCall(message.functionCall)
+    }
 
-    return await this.onAssistantResponse(assistantMessages[0].content)
+    // TODO: Handle other message types
+    throw new Error('Expected message.functionCall to be defined')
   }
 
-  private async onAssistantResponse(
-    response: string
-  ): Promise<UserChatMessage[]> {
-    const json = parseJsonFromMarkdown(response)
+  private async onFunctionCall(
+    functionCall: ChatFunctionCall
+  ): Promise<ChatMessage> {
+    const func = this.invokables.find((inv) => inv.name === functionCall.name)
 
-    const invocation = await parseInvocation(json, this.apis)
-    const { api, method, args } = invocation
+    if (!func) {
+      throw new Error(`Unknown function: ${functionCall.name}`)
+    }
 
-    const result = await api.invoke({ method, args })
+    const result = await func.callback(functionCall.arguments)
+    const content = typeof result === 'string' ? result : JSON.stringify(result)
 
-    return [
-      {
-        role: 'user',
-        content: renderInvocationResult({ invocation, result }),
-      },
-    ]
+    return {
+      role: 'function',
+      name: functionCall.name,
+      content,
+    }
+  }
+
+  private get invokables() {
+    return this.apis.flatMap((api) => api.invokables)
   }
 }

@@ -2,15 +2,17 @@ import { z } from 'zod'
 import { ChatRequest } from '../chat-agents/types'
 import { Api } from './base'
 import { invokable } from './helpers/decorators'
-import { OpenApiAgent } from '../chat-agents/open-ai'
-import { OpenApiAgentOptions } from '../chat-agents/open-ai/open-ai'
+import {
+  OpenAiAgent,
+  OpenApiAgentOptions,
+} from '../chat-agents/open-ai/open-ai'
 
 export class FactApi extends Api {
-  chatClient: OpenApiAgent
+  chatClient: OpenAiAgent
 
   constructor(options: OpenApiAgentOptions = {}) {
     super()
-    this.chatClient = new OpenApiAgent(options)
+    this.chatClient = new OpenAiAgent(options)
   }
 
   @invokable({
@@ -24,7 +26,7 @@ export class FactApi extends Api {
       this.buildQuestionPrompt(question)
     )
 
-    return response.message.content
+    return response.content
   }
 
   private buildQuestionPrompt(question: string): ChatRequest {

@@ -5,8 +5,7 @@ import { WorkGptRunner } from '../src/runners/workgpt'
 async function main() {
   const agent = new OpenAiAgent({
     verbose: true,
-    temperature: 0.1,
-    model: 'gpt-4',
+    temperature: 0,
   })
 
   const apis = [new Calculator()]
