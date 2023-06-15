@@ -7,14 +7,13 @@ import { TextBrowser } from '../src/apis/text-browser'
 
 export class WorkGptControl extends Api {
   @invokable({
-    usage:
-      'Finishes the program. Call when you have an answer, or you have finished the task you were given.',
+    usage: 'Finishes the program. Call when you have an answer.',
     schema: z.object({
       fundingRounds: z.array(
         z.object({
           organizationName: z.string(),
           transactionName: z.string(),
-          moneyRaised: z.number().describe('in USD'),
+          moneyRaised: z.string(),
           leadInvestors: z.array(z.string()),
         })
       ),
@@ -28,7 +27,7 @@ export class WorkGptControl extends Api {
 async function main() {
   const agent = new OpenAiAgent({
     verbose: true,
-    temperature: 0.1,
+    temperature: 0,
     model: 'gpt-4-0613',
   })
 
@@ -38,7 +37,7 @@ async function main() {
     agent,
     apis,
     onResult: (result) => {
-      console.log('Result', result)
+      console.log('Result', JSON.stringify(result, null, 2))
     },
   })
 
