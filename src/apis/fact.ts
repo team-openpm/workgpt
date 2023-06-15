@@ -18,7 +18,7 @@ export class FactApi extends Api {
   @invokable({
     usage: `Useful for asking questions like "What is the capital of France?"`,
     schema: z.object({
-      question: z.string().describe('question'),
+      question: z.string(),
     }),
   })
   async askQuestion({ question }: { question: string }): Promise<string> {

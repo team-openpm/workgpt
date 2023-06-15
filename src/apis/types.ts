@@ -8,8 +8,8 @@ export interface ApiInterface {
 }
 
 export interface Invokable {
-  description: string
+  usage: string
   name: string
-  schema?: z.ZodObject<any, any>
+  schema?: z.AnyZodObject
   callback: (args: Record<string, any>) => Promise<any>
 }

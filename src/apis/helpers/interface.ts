@@ -3,11 +3,11 @@ import { zodToFunctionParameters } from '../../lib/zod-fns'
 import { ChatFunction } from '../../chat-agents/types'
 
 export function getChatFunction(invokable: Invokable): ChatFunction {
-  const { name, description, schema } = invokable
+  const { name, usage, schema } = invokable
 
   return {
     name,
-    description,
+    description: usage,
     parameters: schema
       ? zodToFunctionParameters(schema)
       : {

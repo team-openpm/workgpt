@@ -10,32 +10,48 @@ export function invokable({
   usage: string | (() => string)
 
   // Schema should be an array
-  schema?: z.ZodObject<any, any>
+  schema?: z.AnyZodObject
 }) {
   return function (
     target: object,
-    functionName: string,
+    propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
-    const existingInvokables = getInvocables(target)
-    const namespace = target.constructor.name
+    const existingInvokables = getPrivateInvocables(target)
 
     existingInvokables.push({
-      name: `${namespace}_${functionName}`,
-      description: typeof usage === 'string' ? usage : usage(),
+      propertyKey,
+      usage: typeof usage === 'string' ? usage : usage(),
       schema,
-      callback: descriptor.get ?? descriptor.value,
     })
 
-    setInvocables(target, existingInvokables)
+    setPrivateInvocables(target, existingInvokables)
 
     return descriptor.get ?? descriptor.value
   }
 }
+
 export function getInvocables(target: object): Invokable[] {
+  const invokables = getPrivateInvocables(target)
+  const namespace = target.constructor.name
+
+  return invokables.map((invokable) => ({
+    ...invokable,
+    name: `${namespace}_${invokable.propertyKey}`,
+    callback: (target as any)[invokable.propertyKey].bind(target),
+  }))
+}
+
+interface PrivateInvokable {
+  usage: string
+  propertyKey: string
+  schema?: z.AnyZodObject
+}
+
+function getPrivateInvocables(target: object): PrivateInvokable[] {
   return Reflect.getMetadata(invokableMetadataKey, target) ?? []
 }
 
-export function setInvocables(target: object, invocables: Invokable[]) {
+function setPrivateInvocables(target: object, invocables: PrivateInvokable[]) {
   Reflect.defineMetadata(invokableMetadataKey, invocables, target)
 }

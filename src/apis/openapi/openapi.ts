@@ -30,10 +30,15 @@ export class OpenApi extends Api {
   // Should look like:
   // [{method: 'get_users', usage: 'Gets all users', schema: z.string()}]
   get invokables(): Invokable[] {
-    return this.document.endpoints.map(endpointToInvokable)
+    return this.document.endpoints.map((endpoint) =>
+      this.endpointToInvokable(endpoint)
+    )
   }
 
-  async invokeMethod(method: string, args: any[]): Promise<string> {
+  async invokeMethod(
+    method: string,
+    args: { path?: Record<string, any>; body?: Record<string, any> }
+  ): Promise<string> {
     const endpoint = this.document.endpoints.find(
       (endpoint) => endpoint.apiMethod === method
     )
@@ -42,22 +47,13 @@ export class OpenApi extends Api {
       throw new Error(`Unknown method: ${method}`)
     }
 
-    let pathParams: Record<string, any> = {}
-    let bodyParams: Record<string, any> = {}
-
-    if (endpoint.parametersSchema) {
-      ;[pathParams, bodyParams] = args
-    } else {
-      ;[bodyParams] = args
-    }
-
     const request = buildRequest({
       origin: this.document.origin!,
       path: endpoint.path,
       method: endpoint.method,
       auth: endpoint.getAuthFor(this.authKey),
-      pathParams,
-      bodyParams,
+      pathParams: args.path,
+      bodyParams: args.body,
     })
 
     const response = await this.makeRequest(request)
@@ -101,13 +97,13 @@ export class OpenApi extends Api {
     const parsed = await OpenApiDocument.fromDocument(document)
     return new this(parsed, options)
   }
-}
 
-function endpointToInvokable(endpoint: OpenApiEndpoint): Invokable {
-  return {
-    name: endpoint.apiMethod,
-    description: endpoint.apiUsage,
-    schema: endpoint.apiSchema,
-    responseSchema: endpoint.apiResponseSchema,
+  private endpointToInvokable(endpoint: OpenApiEndpoint): Invokable {
+    return {
+      name: endpoint.apiMethod,
+      usage: endpoint.apiUsage,
+      schema: endpoint.apiSchema ?? undefined,
+      callback: this.invokeMethod.bind(this, endpoint.apiMethod),
+    }
   }
 }
