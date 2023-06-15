@@ -8,6 +8,7 @@ import { Runner } from '../base'
 import { buildInitialPrompt } from './prompt'
 import { Api } from '../../apis'
 import { WorkGptControl } from '../../apis/workgpt-control'
+import { haltProgram } from '../control'
 
 interface WorkGptRunnerOptions {
   agent: ChatAgent
@@ -28,12 +29,11 @@ export class WorkGptRunner extends Runner {
   }
 
   async call(message: ChatResponse): Promise<ChatMessage> {
-    if (message.functionCall) {
-      return this.onFunctionCall(message.functionCall)
+    if (message.function_call) {
+      return this.onFunctionCall(message.function_call)
     }
 
-    // TODO: Handle other message types
-    throw new Error('Expected message.functionCall to be defined')
+    haltProgram(message)
   }
 
   private async onFunctionCall(
@@ -45,7 +45,9 @@ export class WorkGptRunner extends Runner {
       throw new Error(`Unknown function: ${functionCall.name}`)
     }
 
-    const result = await func.callback(functionCall.arguments)
+    const parsedArguments = JSON.parse(functionCall.arguments)
+
+    const result = await func.callback(parsedArguments)
     const content = typeof result === 'string' ? result : JSON.stringify(result)
 
     return {

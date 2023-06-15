@@ -14,13 +14,14 @@ export function invokable({
 }) {
   return function (
     target: object,
-    method: string,
+    functionName: string,
     descriptor: PropertyDescriptor
   ) {
     const existingInvokables = getInvocables(target)
+    const namespace = target.constructor.name
 
     existingInvokables.push({
-      name: method,
+      name: `${namespace}_${functionName}`,
       description: typeof usage === 'string' ? usage : usage(),
       schema,
       callback: descriptor.get ?? descriptor.value,

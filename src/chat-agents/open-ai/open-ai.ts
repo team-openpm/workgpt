@@ -1,9 +1,8 @@
 import { assert } from '../../lib/assert'
 import { ChatAgent } from '../base'
-import { logChatMessage } from '../logger'
+import { logChatFunction, logChatMessage } from '../logger'
 import { ChatFunction, ChatMessage, ChatResponse } from '../types'
 import { fetchApi } from './client'
-import { normalizeChatMessage } from './helpers'
 import { OpenAIChatCompletion } from './types'
 
 export interface OpenApiAgentOptions {
@@ -57,11 +56,10 @@ export class OpenAiAgent extends ChatAgent {
     assert(response.choices.length === 1, 'Expected response.choices to be 1')
 
     const [choice] = response.choices
-    const message = normalizeChatMessage(choice.message)
 
-    this.onResponse(message)
+    this.onResponse(choice.message)
 
-    return message
+    return choice.message
   }
 
   protected onRequest({
@@ -71,17 +69,19 @@ export class OpenAiAgent extends ChatAgent {
     messages: ChatMessage[]
     functions?: ChatFunction[]
   }) {
-    this.log({ messages, functions })
+    this.log({ direction: 'outgoing', messages, functions })
   }
 
   protected onResponse(message: ChatResponse) {
-    this.log({ messages: [message] })
+    this.log({ direction: 'incoming', messages: [message] })
   }
 
   protected log({
+    direction,
     messages,
     functions,
   }: {
+    direction: 'incoming' | 'outgoing'
     messages: ChatMessage[]
     functions?: ChatFunction[]
   }) {
@@ -89,11 +89,7 @@ export class OpenAiAgent extends ChatAgent {
       return
     }
 
-    // TODO incoming/outgoing
-
-    messages.forEach(logChatMessage)
-
-    // Todo
-    console.log(functions)
+    functions?.forEach(logChatFunction.bind(null, direction))
+    messages.forEach(logChatMessage.bind(null, direction))
   }
 }

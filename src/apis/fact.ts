@@ -26,7 +26,7 @@ export class FactApi extends Api {
       this.buildQuestionPrompt(question)
     )
 
-    return response.content
+    return response.content!
   }
 
   private buildQuestionPrompt(question: string): ChatRequest {

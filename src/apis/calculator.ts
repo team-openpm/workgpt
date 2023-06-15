@@ -7,9 +7,11 @@ import { z } from 'zod'
 export class Calculator extends Api {
   @invokable({
     usage: `Useful for getting the result of a math expression. The input to this tool should be a valid mathematical expression that could be executed by a simple calculator.`,
-    schema: z.tuple([z.string().describe('expression')]),
+    schema: z.object({
+      input: z.string().describe('input'),
+    }),
   })
-  async evaluate(input: string) {
+  async evaluate({ input }: { input: string }): Promise<string> {
     try {
       const result = Parser.evaluate(input).toString()
 
