@@ -1,7 +1,7 @@
 import { Calculator } from '../src/apis/calculator'
 import { FactApi } from '../src/apis/fact'
 import { OpenpmApi } from '../src/apis/openpm'
-import { OpenApiAgent } from '../src/chat-agents/openapi'
+import { OpenApiAgent } from '../src/chat-agents/open-ai'
 import { WorkGptScriptRunner } from '../src/runners/workgpt-script'
 
 // This is an experimental script runner that allows the assistant to run JavaScript

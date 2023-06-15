@@ -17,7 +17,7 @@ export interface OpenApiAgentOptions {
   verbose?: boolean
 }
 
-export class OpenApiAgent extends ChatAgent {
+export class OpenAiAgent extends ChatAgent {
   model: string
   temperature: number
   apiKey: string | undefined
@@ -63,10 +63,10 @@ export class OpenApiAgent extends ChatAgent {
     const [choice] = response.choices
     const message = choice.message
 
-    let responseFunctionCall: ChatResponseFunctionCall | undefined
+    let parsedFunctionCall: ChatResponseFunctionCall | undefined
 
     if (message.function_call) {
-      responseFunctionCall = {
+      parsedFunctionCall = {
         name: message.function_call.name,
         arguments: JSON.parse(message.function_call.arguments),
       }
@@ -75,8 +75,9 @@ export class OpenApiAgent extends ChatAgent {
     this.onResponse(message)
 
     return {
-      message,
-      functionCall: responseFunctionCall,
+      role: message.role,
+      content: message.content,
+      functionCall: parsedFunctionCall,
     }
   }
 

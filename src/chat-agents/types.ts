@@ -24,17 +24,15 @@ export interface ChatRequest {
   functionCall?: string
 }
 
-export interface ChatResponseMessage {
-  role: ChatMessageRole
-  content: string
-}
-
 export interface ChatResponseFunctionCall {
   name: string
   arguments: any
 }
 
-export interface ChatResponse {
-  message: ChatResponseMessage
+export interface ChatResponseMessage {
+  role: ChatMessageRole
+  content: string | null
   functionCall?: ChatResponseFunctionCall
 }
+
+export type ChatResponse = ChatResponseMessage

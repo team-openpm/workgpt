@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { ChatRequest } from '../chat-agents/types'
 import { Api } from './base'
 import { invokable } from './helpers/decorators'
-import { OpenApiAgent } from '../chat-agents/openapi'
-import { OpenApiAgentOptions } from '../chat-agents/openapi/openapi'
+import { OpenApiAgent } from '../chat-agents/open-ai'
+import { OpenApiAgentOptions } from '../chat-agents/open-ai/open-ai'
 
 export class FactApi extends Api {
   chatClient: OpenApiAgent

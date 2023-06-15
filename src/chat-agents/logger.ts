@@ -10,6 +10,8 @@ export function logChatMessage({ content, role }: ChatMessage): void {
 
 function getColor(role: string): ColorName {
   switch (role) {
+    case 'function':
+      return 'green'
     case 'assistant':
       return 'blue'
     case 'user':

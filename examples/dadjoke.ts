@@ -1,6 +1,6 @@
 import { Calculator } from '../src/apis/calculator'
 import { DadJokeApi } from '../src/apis/dadjoke'
-import { OpenApiAgent } from '../src/chat-agents/openapi'
+import { OpenApiAgent } from '../src/chat-agents/open-ai'
 import { WorkGptRunner } from '../src/runners/workgpt'
 
 async function main() {

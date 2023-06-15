@@ -1,5 +1,9 @@
 import { ChatAgent } from '../chat-agents/base'
-import { ChatMessage, UserChatMessage } from '../chat-agents/types'
+import {
+  ChatFunction,
+  ChatMessage,
+  UserChatMessage,
+} from '../chat-agents/types'
 import { ManagedError, RunnerHalt } from './types'
 
 interface RunnerOptions {
@@ -18,8 +22,14 @@ export abstract class Runner {
 
   protected abstract call(messages: ChatMessage[]): Promise<UserChatMessage[]>
 
-  async run(messages: ChatMessage[] = []) {
-    const assistantMessages = await this.agent.call(messages)
+  async run({
+    messages = [],
+    functions,
+  }: {
+    messages?: ChatMessage[]
+    functions?: ChatFunction[]
+  }) {
+    const assistantMessages = await this.agent.call({ messages, functions })
 
     let userMessages: ChatMessage[] = []
 
