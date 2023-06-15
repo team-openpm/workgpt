@@ -153,20 +153,27 @@ export class OpenApiEndpoint {
     return `${this.method}_${pathPart}`
   }
 
-  get apiSchema(): z.ZodTuple | null {
+  get apiSchema(): z.AnyZodObject | null {
     const pathSchema = this.parametersSchema?.zodSchema ?? null
     const bodySchema = this.bodySchema?.zodSchema ?? null
 
     if (pathSchema && bodySchema) {
-      return z.tuple([pathSchema, bodySchema])
+      return z.object({
+        path: pathSchema,
+        body: bodySchema,
+      })
     }
 
     if (pathSchema) {
-      return z.tuple([pathSchema])
+      return z.object({
+        path: pathSchema,
+      })
     }
 
     if (bodySchema) {
-      return z.tuple([bodySchema])
+      return z.object({
+        body: bodySchema,
+      })
     }
 
     return null

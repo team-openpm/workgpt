@@ -1,9 +1,5 @@
-import { RunnerContinue, RunnerHalt } from './types'
+import { RunnerHalt } from './types'
 
-export function haltProgram(result: any) {
+export function haltProgram(result: any): never {
   throw new RunnerHalt(result)
-}
-
-export function continueProgram(result: any) {
-  throw new RunnerContinue(result)
 }

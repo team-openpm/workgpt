@@ -1,15 +1,34 @@
 import chalk, { ColorName } from 'chalk'
-import { ChatMessage } from './types'
+import { ChatFunction, ChatMessage } from './types'
 
-export function logChatMessage({ content, role }: ChatMessage): void {
-  const color = getColor(role)
-  const message = prefixLines(`${role}: `.padEnd(20), content)
+export function logChatFunction(
+  direction: 'incoming' | 'outgoing',
+  chatFunction: ChatFunction
+) {
+  const message = prefixLines(
+    `${direction === 'outgoing' ? '>>>' : '<<<'} functions: `.padEnd(20),
+    JSON.stringify(chatFunction, null, 2)
+  )
+  console.log(chalk.white(message))
+}
 
-  console.log(chalk[color](message))
+export function logChatMessage(
+  direction: 'incoming' | 'outgoing',
+  message: ChatMessage
+): void {
+  const color = getColor(message.role)
+  const log = prefixLines(
+    `${direction === 'outgoing' ? '>>>' : '<<<'} ${message.role}: `.padEnd(20),
+    JSON.stringify(message, null, 2)
+  )
+
+  console.log(chalk[color](log))
 }
 
 function getColor(role: string): ColorName {
   switch (role) {
+    case 'function':
+      return 'green'
     case 'assistant':
       return 'blue'
     case 'user':

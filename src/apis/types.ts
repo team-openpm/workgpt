@@ -1,14 +1,15 @@
 import { z } from 'zod'
+import { ChatFunction } from '../chat-agents/types'
 
 export interface ApiInterface {
   namespace: string
-  interface: string
-  invoke: (args: { method: string; args: any }) => Promise<string>
+  functions: ChatFunction[]
+  invokables: Invokable[]
 }
 
 export interface Invokable {
   usage: string
-  method: string
-  schema: z.ZodType<any> | null
-  responseSchema: z.ZodType<any> | null
+  name: string
+  schema?: z.AnyZodObject
+  callback: (args: Record<string, any>) => Promise<any>
 }

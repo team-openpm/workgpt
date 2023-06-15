@@ -1,13 +1,14 @@
 import { ChatAgent } from '../../chat-agents/base'
-import { ChatMessage, UserChatMessage } from '../../chat-agents/types'
-import { assert } from '../../lib/assert'
+import {
+  ChatFunctionCall,
+  ChatMessage,
+  ChatResponse,
+} from '../../chat-agents/types'
 import { Runner } from '../base'
 import { buildInitialPrompt } from './prompt'
-import { parseInvocation } from './invocations/parse'
-import { parseJsonFromMarkdown } from '../../lib/markdown'
-import { WorkGptControl } from '../../apis/workgpt-control'
 import { Api } from '../../apis'
-import { renderInvocationResult } from './invocations/render'
+import { WorkGptControl } from '../../apis/workgpt-control'
+import { haltProgram } from '../control'
 
 interface WorkGptRunnerOptions {
   agent: ChatAgent
@@ -27,30 +28,36 @@ export class WorkGptRunner extends Runner {
     return this.run(buildInitialPrompt({ apis: this.apis, directive }))
   }
 
-  async call(assistantMessages: ChatMessage[]): Promise<UserChatMessage[]> {
-    assert(
-      assistantMessages.length === 1,
-      'WorkGptRunner only supports one assistant message'
-    )
+  async call(message: ChatResponse): Promise<ChatMessage> {
+    if (message.function_call) {
+      return this.onFunctionCall(message.function_call)
+    }
 
-    return await this.onAssistantResponse(assistantMessages[0].content)
+    haltProgram(message)
   }
 
-  private async onAssistantResponse(
-    response: string
-  ): Promise<UserChatMessage[]> {
-    const json = parseJsonFromMarkdown(response)
+  private async onFunctionCall(
+    functionCall: ChatFunctionCall
+  ): Promise<ChatMessage> {
+    const func = this.invokables.find((inv) => inv.name === functionCall.name)
 
-    const invocation = await parseInvocation(json, this.apis)
-    const { api, method, args } = invocation
+    if (!func) {
+      throw new Error(`Unknown function: ${functionCall.name}`)
+    }
 
-    const result = await api.invoke({ method, args })
+    const parsedArguments = JSON.parse(functionCall.arguments)
 
-    return [
-      {
-        role: 'user',
-        content: renderInvocationResult({ invocation, result }),
-      },
-    ]
+    const result = await func.callback(parsedArguments)
+    const content = typeof result === 'string' ? result : JSON.stringify(result)
+
+    return {
+      role: 'function',
+      name: functionCall.name,
+      content,
+    }
+  }
+
+  private get invokables() {
+    return this.apis.flatMap((api) => api.invokables)
   }
 }

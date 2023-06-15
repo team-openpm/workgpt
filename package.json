@@ -73,11 +73,12 @@
     ]
   },
   "dependencies": {
+    "@types/json-schema": "^7.0.12",
     "chalk": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "semver": "^7.5.1",
     "zod": "^3.21.4",
-    "zod-to-ts": "^1.1.4"
+    "zod-to-json-schema": "^3.21.1"
   },
   "peerDependencies": {
     "vm2": "^3.9.17"

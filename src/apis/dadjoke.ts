@@ -4,11 +4,13 @@ import { invokable } from './helpers/decorators'
 
 export class DadJokeApi extends Api {
   @invokable({
-    schema: z.tuple([z.string().describe('topic')]),
+    schema: z.object({
+      topic: z.string().optional().describe('topic'),
+    }),
     usage:
       'a dad joke generator. get a dad joke about a specific topic. input should be a search term.',
   })
-  async makeJoke(topic: string): Promise<string> {
+  async makeJoke({ topic }: { topic: string }): Promise<string> {
     const headers = { Accept: 'application/json' }
     const searchUrl = `https://icanhazdadjoke.com/search?term=${topic}`
 

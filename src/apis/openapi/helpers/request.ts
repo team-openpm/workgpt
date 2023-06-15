@@ -14,8 +14,8 @@ interface RequestOptions {
   path: string
   origin: string
   method?: OpenAPI.HttpMethods
-  pathParams: Record<string, any>
-  bodyParams: Record<string, any>
+  pathParams?: Record<string, any>
+  bodyParams?: Record<string, any>
   auth?: AuthOption
 }
 
@@ -23,8 +23,8 @@ export function buildRequest({
   path,
   origin,
   method = OpenAPI.HttpMethods.GET,
-  pathParams,
-  bodyParams,
+  pathParams = {},
+  bodyParams = {},
   auth,
 }: RequestOptions): Request {
   const url = buildUrl({

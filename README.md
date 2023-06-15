@@ -14,13 +14,13 @@ npm install workgpt
 import { Calculator } from 'workgpt/apis/calculator'
 import { FactApi } from 'workgpt/apis/fact'
 import { OpenpmApi } from 'workgpt/apis/openpm'
-import { OpenApiAgent } from 'workgpt/chat-agents/openapi'
+import { OpenAiAgent } from 'workgpt/chat-agents/open-ai'
 import { WorkGptRunner } from 'workgpt/runners/workgpt'
 
-const agent = new OpenApiAgent({
+const agent = new OpenAiAgent({
   verbose: true,
   temperature: 0.1,
-  model: 'gpt-4',
+  model: 'gpt-4-0613',
 })
 
 const apis = await Promise.all([
