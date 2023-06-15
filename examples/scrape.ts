@@ -19,7 +19,7 @@ export class WorkGptControl extends Api {
       ),
     }),
   })
-  onFinish(result: { city: string; population: number }) {
+  onFinish(result: any) {
     haltProgram(result)
   }
 }
