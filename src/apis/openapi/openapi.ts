@@ -100,7 +100,7 @@ export class OpenApi extends Api {
 
   private endpointToInvokable(endpoint: OpenApiEndpoint): Invokable {
     return {
-      name: endpoint.apiMethod,
+      name: `${this.namespace}_${endpoint.apiMethod}`,
       usage: endpoint.apiUsage,
       schema: endpoint.apiSchema ?? undefined,
       callback: this.invokeMethod.bind(this, endpoint.apiMethod),

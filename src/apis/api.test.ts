@@ -18,12 +18,12 @@ describe('ApiBase', () => {
 
   const myApi = new MyApi()
 
-  it('has interface', async () => {
+  it('has functions', async () => {
     expect(myApi.functions).toMatchInlineSnapshot(`
       [
         {
           "description": "myapi doSomething",
-          "name": "doSomething",
+          "name": "MyApi_doSomething",
           "parameters": {
             "additionalProperties": false,
             "properties": {
@@ -47,12 +47,22 @@ describe('ApiBase', () => {
     `)
   })
 
+  it('has invokables', async () => {
+    expect(myApi.invokables.map((i) => i.name)).toMatchInlineSnapshot(`
+      [
+        "MyApi_doSomething",
+      ]
+    `)
+  })
+
   it('invokes', async () => {
-    expect(
-      await myApi.invoke({
-        functionName: 'doSomething',
-        functionArgs: { inputA: 'foo', inputB: 'bar' },
-      })
-    ).toEqual('barfoo')
+    const invokable = myApi.invokables[0]
+
+    expect(invokable).toBeTruthy()
+    expect(invokable.name).toEqual('MyApi_doSomething')
+
+    expect(await invokable.callback({ inputA: 'foo', inputB: 'bar' })).toEqual(
+      'barfoo'
+    )
   })
 })
