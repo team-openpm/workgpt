@@ -48,7 +48,8 @@
     "typecheck": "tsc --noEmit",
     "example:calculate": "env-cmd -f .env.local tsx ./examples/calculate.ts",
     "example:dadjoke": "env-cmd -f .env.local tsx ./examples/dadjoke.ts",
-    "example:openpm-ipinfo": "env-cmd -f .env.local tsx ./examples/openpm-ipinfo.ts"
+    "example:openpm-ipinfo": "env-cmd -f .env.local tsx ./examples/openpm-ipinfo.ts",
+    "example:scrape": "env-cmd -f .env.local tsx ./examples/scrape.ts"
   },
   "devDependencies": {
     "@antfu/ni": "^0.21.3",
@@ -61,6 +62,7 @@
     "esno": "^0.16.3",
     "expr-eval": "^2.0.2",
     "prettier": "^2.8.7",
+    "puppeteer": "^20.7.1",
     "tsup": "^6.7.0",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
@@ -81,6 +83,7 @@
     "zod-to-json-schema": "^3.21.1"
   },
   "peerDependencies": {
+    "puppeteer": "^20.7.1",
     "vm2": "^3.9.17"
   }
 }
