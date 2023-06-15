@@ -1,8 +1,25 @@
+import { z } from 'zod'
+import { Api, invokable } from '../src/apis'
 import { Calculator } from '../src/apis/calculator'
 import { FactApi } from '../src/apis/fact'
 import { OpenpmApi } from '../src/apis/openpm'
 import { OpenAiAgent } from '../src/chat-agents/open-ai'
 import { WorkGptRunner } from '../src/runners/workgpt'
+import { haltProgram } from '../src/runners/control'
+
+export class WorkGptControl extends Api {
+  @invokable({
+    usage:
+      'Finishes the program. Call when you have an answer, or you have finished the task you were given.',
+    schema: z.object({
+      city: z.string(),
+      population: z.number(),
+    }),
+  })
+  onFinish(result: { city: string; population: number }) {
+    haltProgram(result)
+  }
+}
 
 async function main() {
   const agent = new OpenAiAgent({
@@ -17,6 +34,7 @@ async function main() {
     }),
     new Calculator(),
     new FactApi(),
+    new WorkGptControl(),
   ])
 
   const runner = new WorkGptRunner({

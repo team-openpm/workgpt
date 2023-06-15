@@ -7,13 +7,12 @@ import {
 import { Runner } from '../base'
 import { buildInitialPrompt } from './prompt'
 import { Api } from '../../apis'
-import { WorkGptControl } from '../../apis/workgpt-control'
 import { haltProgram } from '../control'
 
 interface WorkGptRunnerOptions {
   agent: ChatAgent
   apis?: Api[]
-  onResult?: (result?: string) => void
+  onResult?: (result?: any) => void
 }
 
 export class WorkGptRunner extends Runner {
@@ -21,7 +20,7 @@ export class WorkGptRunner extends Runner {
 
   constructor({ agent, onResult, apis = [] }: WorkGptRunnerOptions) {
     super({ agent, onResult })
-    this.apis = [...apis, new WorkGptControl()]
+    this.apis = apis
   }
 
   async runWithDirective(directive: string) {
@@ -33,7 +32,7 @@ export class WorkGptRunner extends Runner {
       return this.onFunctionCall(message.function_call)
     }
 
-    haltProgram(message)
+    haltProgram(message.content)
   }
 
   private async onFunctionCall(

@@ -40,7 +40,7 @@ export abstract class Runner {
     })
   }
 
-  onHalt(result?: string) {
+  onHalt(result?: any) {
     if (this.onResult) {
       this.onResult(result)
     } else {
