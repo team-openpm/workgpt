@@ -50,7 +50,7 @@ await runner.runWithDirective(
 
 ## What is OpenPM
 
-[OpenPM](https://openpm.ai) is a package manager for OpenAPI files. In the example above you can see we've pulled in a package called `ipinfo` to be used for looking up IP addresses. 
+You'll notice that we're using an OpenPM API in the example above. [OpenPM](https://openpm.ai) is a package manager for OpenAPI files. In the example you can see we've pulled in a package from OpenPM called `ipinfo` to be used for looking up IP addresses. 
 
 You don't have to use OpenPM. We support importing any arbitrary OpenAPI file. You can see that we're smart about authentication. You just need to pass an `authKey` and the library will figure out how to authorize itself. All the endpoints in the API will be exposed as local functions to the LLM, ready to be invoked.
 
