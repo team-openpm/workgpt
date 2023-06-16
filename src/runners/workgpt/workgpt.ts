@@ -12,7 +12,6 @@ import { haltProgram } from '../control'
 interface WorkGptRunnerOptions {
   agent: ChatAgent
   apis?: Api[]
-  onResult?: (result?: any) => void
 }
 
 export class WorkGptRunner extends Runner {

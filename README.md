@@ -49,7 +49,7 @@ console.log('Result', result)
 
 ## What is OpenPM
 
-You'll notice that we're using an OpenPM API in the example above. [OpenPM](https://openpm.ai) is a package manager for OpenAPI files. In the example you can see we've pulled in a package from OpenPM called `ipinfo` to be used for looking up IP addresses. 
+You'll notice that we're using an OpenPM API in the example above. [OpenPM](https://openpm.ai) is a package manager for OpenAPI files. In the example you can see we've pulled in a package from OpenPM called `ipinfo` to be used for looking up IP addresses.
 
 You don't have to use OpenPM. We support importing any arbitrary OpenAPI file. You can see that we're smart about authentication. You just need to pass an `authKey` and the library will figure out how to authorize itself. All the endpoints in the API will be exposed as local functions to the LLM, ready to be invoked.
 
@@ -90,16 +90,14 @@ const apis = await Promise.all([new TextBrowser(), new WorkGptControl()])
 const runner = new WorkGptRunner({
   agent,
   apis,
-  onResult: (result) => {
-    console.log('Result', JSON.stringify(result, null, 2))
-  },
 })
 
-await runner.runWithDirective(
+const result = await runner.runWithDirective(
   'Get the featured funding rounds of https://www.crunchbase.com'
 )
-```
 
+console.log('Result', JSON.stringify(result, null, 2))
+```
 
 ## License
 
