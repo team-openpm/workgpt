@@ -36,14 +36,13 @@ async function main() {
   const runner = new WorkGptRunner({
     agent,
     apis,
-    onResult: (result) => {
-      console.log('Result', JSON.stringify(result, null, 2))
-    },
   })
 
-  await runner.runWithDirective(
+  const result = await runner.runWithDirective(
     'Get the featured funding rounds of https://www.crunchbase.com'
   )
+
+  console.log('Result', JSON.stringify(result, null, 2))
 }
 
 main()

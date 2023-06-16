@@ -40,14 +40,13 @@ async function main() {
   const runner = new WorkGptRunner({
     agent,
     apis,
-    onResult: (result) => {
-      console.log('Result', result)
-    },
   })
 
-  await runner.runWithDirective(
+  const result = await runner.runWithDirective(
     'What is the city related to the ip address 76.220.35.234 and what is the population of that city?'
   )
+
+  console.log('Result', result)
 }
 
 main()

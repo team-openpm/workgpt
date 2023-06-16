@@ -13,7 +13,9 @@ async function main() {
     apis,
   })
 
-  await runner.runWithDirective('Give me a joke about sailing')
+  const result = await runner.runWithDirective('Give me a joke about sailing')
+
+  console.log('Result', result)
 }
 
 main()
