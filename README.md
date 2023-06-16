@@ -2,6 +2,10 @@
 
 [![NPM version](https://img.shields.io/npm/v/workgpt?color=a1b858&label=)](https://www.npmjs.com/package/workgpt)
 
+WorkGPT is an agent framework in a similar fashion to AutoGPT or LangChain. You give it a directive and an array of APIs and it will converse back and forth with the AI until its directive is complete.
+
+For example, a directive could be to research the web for something, to crawl a website, or to order you an Uber. We support any and all APIs that can be represented with an OpenAPI file.
+
 ## Install
 
 ```bash
