@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: [
-    "src/index.ts",
+    'src/index.ts',
     'src/apis/*',
     'src/chat-agents/*',
     'src/runners/*',
