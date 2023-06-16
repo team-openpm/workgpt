@@ -25,13 +25,61 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
+    },
+    "./apis/*": {
+      "types": "./dist/apis/*.d.ts",
+      "require": "./dist/apis/*.cjs",
+      "import": "./dist/apis/*.js",
+      "default": "./dist/apis/*.js"
+    },
+    "./chat-agents/*": {
+      "types": "./dist/chat-agents/*.d.ts",
+      "require": "./dist/chat-agents/*.cjs",
+      "import": "./dist/chat-agents/*.js",
+      "default": "./dist/chat-agents/*.js"
+    },
+    "./runners/*": {
+      "types": "./dist/runners/*.d.ts",
+      "require": "./dist/runners/*.cjs",
+      "import": "./dist/runners/*.js",
+      "default": "./dist/runners/*.js"
+    },
+    "./apis/openpm": {
+      "types": "./dist/apis/openpm/index.d.ts",
+      "require": "./dist/apis/openpm/index.cjs",
+      "import": "./dist/apis/openpm/index.js"
+    },
+    "./chat-agents/open-ai": {
+      "types": "./dist/chat-agents/open-ai/index.d.ts",
+      "require": "./dist/chat-agents/open-ai/index.cjs",
+      "import": "./dist/chat-agents/open-ai/index.js"
+    },
+    "./runners/workgpt": {
+      "types": "./dist/runners/workgpt/index.d.ts",
+      "require": "./dist/runners/workgpt/index.cjs",
+      "import": "./dist/runners/workgpt/index.js",
+      "default": "./dist/runners/workgpt/index.js"
     }
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
+      "apis/*": [
+        "./dist/apis/*.d.ts"
+      ],
+      "chat-agents/*": [
+        "./dist/chat-agents/*.d.ts"
+      ],
+      "runners/*": [
+        "./dist/runners/*.d.ts"
+      ],
+      "apis/openpm": [
+        "./dist/apis/openpm/index.d.ts"
+      ],
+      "chat-agents/open-ai": [
+        "./dist/chat-agents/open-ai/index.d.ts"
+      ],
+      "runners/workgpt": [
+        "./dist/runners/workgpt/index.d.ts"
       ]
     }
   },
