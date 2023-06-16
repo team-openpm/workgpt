@@ -6,6 +6,7 @@ import { OpenpmApi } from '../src/apis/openpm'
 import { OpenAiAgent } from '../src/chat-agents/open-ai'
 import { haltProgram } from '../src/runners/control'
 import { WorkGptRunner } from '../src/runners/workgpt'
+import { TextBrowser } from '../src/apis/text-browser'
 
 export class WorkGptControl extends Api {
   @invokable({
@@ -35,8 +36,10 @@ async function main() {
     OpenpmApi.fromPackageId('serpapi-search', {
       authKey: process.env.SERPAPI_API_KEY!,
     }),
+    new TextBrowser(),
     new Calculator(),
     new FactApi(),
+    new WorkGptControl(),
   ])
 
   const runner = new WorkGptRunner({
@@ -45,23 +48,16 @@ async function main() {
   })
 
   const result = await runner.runWithDirective(
-    'What is the the five day forecast for San Francisco?'
-  )
-
-  const secondRunner = new WorkGptRunner({
-    agent,
-    apis: [new WorkGptControl()],
-  })
-
-  const parsedResult = await secondRunner.runWithDirective(
-    `Format this forecast into a list of dates and weather. The current date is ${new Date()
+    `
+    Run these commands in order. Think carefully step by step. 
+    1. What is the five day forecast for San Francisco?
+    2. Format this forecast into a list of dates and weather. The current date is ${new Date()
       .toISOString()
       .slice(0, 10)}.
-      
-    \n\n${result}`
+    `
   )
 
-  console.log('Result', JSON.stringify(parsedResult, null, 2))
+  console.log('Result', JSON.stringify(result, null, 2))
 }
 
 main()

@@ -25,7 +25,7 @@ async function extractText(page: Page) {
   // concatenates all text nodes, which means we lose the whitespace between them
   const texts = (await page.evaluate(`
     var texts = []
-    document.querySelectorAll('style,svg,script,img,iframe').forEach((style) => style.remove())
+    document.querySelectorAll('style,svg,script,img,iframe').forEach((el) => el.remove())
 
     function visitNode(node) {
       if (node.nodeType === node.TEXT_NODE && node.textContent) {
