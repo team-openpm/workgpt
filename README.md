@@ -48,6 +48,60 @@ await runner.runWithDirective(
 )
 ```
 
+## What is OpenPM
+
+[OpenPM](https://openpm.ai) is a package manager for OpenAPI files. In the example above you can see we've pulled in a package called `ipinfo` to be used for looking up IP addresses. 
+
+You don't have to use OpenPM. We support importing any arbitrary OpenAPI file. You can see that we're smart about authentication. You just need to pass an `authKey` and the library will figure out how to authorize itself. All the endpoints in the API will be exposed as local functions to the LLM, ready to be invoked.
+
+## Crawling example
+
+We include an example of using Puppeteer as a text-based browser to give the LLM access to the web. You'll notice that the text-based browser passes out all the HTML and just returns text. This is actually enough for GPT-4, which is smart enough to extract data from the plain text.
+
+We can pass our own custom API to the LLM as a finishing program API that the LLM can call whenever it's finished. The advantage of this is that you can give it a schema to follow, which is great when trying to extract data from a webpage.
+
+```typescript
+export class WorkGptControl extends Api {
+  @invokable({
+    usage: 'Finishes the program. Call when you have an answer.',
+    schema: z.object({
+      fundingRounds: z.array(
+        z.object({
+          organizationName: z.string(),
+          transactionName: z.string(),
+          moneyRaised: z.string(),
+          leadInvestors: z.array(z.string()),
+        })
+      ),
+    }),
+  })
+  onFinish(result: any) {
+    haltProgram(result)
+  }
+}
+
+const agent = new OpenAiAgent({
+  verbose: true,
+  temperature: 0,
+  model: 'gpt-4-0613',
+})
+
+const apis = await Promise.all([new TextBrowser(), new WorkGptControl()])
+
+const runner = new WorkGptRunner({
+  agent,
+  apis,
+  onResult: (result) => {
+    console.log('Result', JSON.stringify(result, null, 2))
+  },
+})
+
+await runner.runWithDirective(
+  'Get the featured funding rounds of https://www.crunchbase.com'
+)
+```
+
+
 ## License
 
 MIT
