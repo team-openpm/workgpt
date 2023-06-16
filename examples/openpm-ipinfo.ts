@@ -34,7 +34,6 @@ async function main() {
     }),
     new Calculator(),
     new FactApi(),
-    new WorkGptControl(),
   ])
 
   const runner = new WorkGptRunner({
