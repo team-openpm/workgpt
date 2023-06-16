@@ -15,7 +15,9 @@ async function main() {
     apis,
   })
 
-  await runner.runWithDirective('What is 1 + 1?')
+  const result = await runner.runWithDirective('What is 1 + 1?')
+
+  console.log('Result', result)
 }
 
 main()

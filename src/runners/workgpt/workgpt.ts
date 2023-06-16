@@ -18,8 +18,8 @@ interface WorkGptRunnerOptions {
 export class WorkGptRunner extends Runner {
   apis: Api[]
 
-  constructor({ agent, onResult, apis = [] }: WorkGptRunnerOptions) {
-    super({ agent, onResult })
+  constructor({ agent, apis = [] }: WorkGptRunnerOptions) {
+    super({ agent })
     this.apis = apis
   }
 

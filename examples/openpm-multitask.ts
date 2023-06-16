@@ -22,14 +22,13 @@ async function main() {
   const runner = new WorkGptRunner({
     agent,
     apis,
-    onResult: (result) => {
-      console.log('Result', result)
-    },
   })
 
-  await runner.runWithDirective(
+  const result = await runner.runWithDirective(
     'What is the the five day forecast for San Francisco?'
   )
+
+  console.log('Result', result)
 }
 
 main()
