@@ -22,8 +22,8 @@ export class WorkGptRunner extends Runner {
     this.apis = apis
   }
 
-  async runWithDirective(directive: string) {
-    return this.run(buildInitialPrompt({ apis: this.apis, directive }))
+  async runWithDirective(directive: string, systemMessage?: string) {
+    return this.run(buildInitialPrompt({ apis: this.apis, directive, systemMessage }))
   }
 
   async call(message: ChatResponse): Promise<ChatMessage> {

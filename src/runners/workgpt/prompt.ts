@@ -4,13 +4,15 @@ import { ChatMessage, ChatRequest } from '../../chat-agents/types'
 export function buildInitialPrompt({
   apis,
   directive,
+  systemMessage,
 }: {
   apis: ApiInterface[]
   directive: string
+  systemMessage?: string
 }): ChatRequest {
   const messages: ChatMessage[] = [
     {
-      content: `You are WorkGpt, a helpful assistant that performs tasks.`,
+      content: systemMessage ?? `You are WorkGpt, a helpful assistant that performs tasks.`,
       role: 'system',
     },
     {
