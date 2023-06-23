@@ -1,7 +1,7 @@
 {
   "name": "workgpt",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packageManager": "pnpm@8.5.1",
   "description": "",
   "author": "Alex MacCaw <alex@alexmaccaw.com>",
